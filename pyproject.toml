@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=69", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["meson-python>=0.15", "meson>=1.2"]
+build-backend = "mesonpy"
 
 [project]
 name = "penguin-burner"

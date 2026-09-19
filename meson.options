@@ -1,0 +1,27 @@
+option(
+  'build_native_layer',
+  type: 'boolean',
+  value: false,
+  description: 'Build the 64-bit Vulkan latency layer',
+)
+
+option(
+  'build_native_layer32',
+  type: 'boolean',
+  value: false,
+  description: 'Build the optional 32-bit Vulkan latency layer',
+)
+
+option(
+  'build_nvapi_shim',
+  type: 'boolean',
+  value: false,
+  description: 'Build the optional MinGW NVAPI shim',
+)
+
+option(
+  'build_daemon',
+  type: 'boolean',
+  value: false,
+  description: 'Build the Rust root daemon',
+)
