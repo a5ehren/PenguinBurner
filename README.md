@@ -51,6 +51,13 @@ Native packages are also available for [Fedora (COPR)](https://copr.fedorainfrac
 [Ubuntu (PPA)](https://launchpad.net/~jpietek/+archive/ubuntu/penguin-burner).
 See the [Install guide](docs/install.md) for prerequisites and commands.
 
+### Meson prototype
+
+This branch contains a parallel Meson/meson-python build path for the Python
+package, Rust daemon, Vulkan latency layer, and NVAPI shim. See the [Meson
+prototype build instructions](docs/install.md#meson-prototype-build) for local
+development and wheel commands.
+
 [Flatpak](docs/flatpak.md) is available too. Native packages are recommended
 because the GPU daemon, game wrappers, and Vulkan overlay run on the host.
 

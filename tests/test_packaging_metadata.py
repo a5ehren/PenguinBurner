@@ -724,6 +724,24 @@ def test_python_build_requires_native_layer_build_tooling() -> None:
     assert "overlay/native/latency_layer/src" in manifest
 
 
+def test_meson_prototype_build_path_is_documented_without_removing_compatibility() -> None:
+    readme = Path("README.md").read_text(encoding="utf-8")
+    install_doc = Path("docs/install.md").read_text(encoding="utf-8")
+    flatpak = Path("packaging/flatpak/io.github.jpietek.PenguinBurner.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert "Meson prototype" in readme
+    assert "Meson" in readme and "docs/install.md#meson-prototype-build" in readme
+    for text in (install_doc,):
+        assert "Meson prototype" in text
+        assert "meson setup" in text
+        assert "meson compile" in text
+        assert "python -m build" in text
+        assert "python setup.py bdist_wheel" in text
+    assert "pip install --prefix=/app" in flatpak
+
+
 def test_native_packages_require_native_layer_build_dependencies() -> None:
     arch_pkgbuild = Path("packaging/arch/PKGBUILD").read_text(encoding="utf-8")
     debian_control = Path("packaging/debian/control").read_text(encoding="utf-8")

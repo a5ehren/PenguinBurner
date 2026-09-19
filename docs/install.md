@@ -95,6 +95,51 @@ If the commands are not found, make sure `~/.local/bin` is on your `PATH`.
 python -m pip install --user --no-index --no-deps --find-links dist --upgrade penguin-burner
 ```
 
+## Meson prototype build
+
+This branch also includes a Meson/meson-python build path for comparison with
+the existing setuptools workflow. It preserves the Python package layout and
+stages the Rust daemon, Vulkan layer, and NVAPI shim into the wheel when their
+build options are enabled.
+
+Development configure/build, without requiring native toolchains:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip meson meson-python pytest
+meson setup build-meson \
+  -Dbuild_native_layer=false \
+  -Dbuild_native_layer32=false \
+  -Dbuild_nvapi_shim=false \
+  -Dbuild_daemon=false
+meson compile -C build-meson
+```
+
+A full Linux wheel enables the daemon, 64-bit Vulkan layer, and NVAPI shim:
+
+```bash
+python -m pip install build
+python -m build --wheel --outdir dist/meson \
+  --config-setting=setup-args=-Dbuild_daemon=true \
+  --config-setting=setup-args=-Dbuild_native_layer=true \
+  --config-setting=setup-args=-Dbuild_nvapi_shim=true
+python scripts/inspect-meson-wheel.py dist/meson/*.whl
+```
+
+That full build requires Cargo, CMake, Vulkan headers, and MinGW-w64. The
+optional 32-bit layer is enabled with
+`--config-setting=setup-args=-Dbuild_native_layer32=true` when a working 32-bit
+toolchain is available.
+
+The Flatpak and native distro recipe files are unchanged on this prototype
+branch; their existing source-install commands exercise the new backend. The
+old setuptools path remains available explicitly for comparison:
+
+```bash
+python setup.py bdist_wheel
+```
+
 ## Root daemon (from a checkout)
 
 The privileged root daemon (`penguin-burnerd`) is a compiled Rust binary. The
