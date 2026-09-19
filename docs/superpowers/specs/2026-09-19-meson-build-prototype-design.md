@@ -19,8 +19,10 @@ inspect the resulting wheel payload before deciding whether to migrate fully.
 - The Vulkan layer's optional 32-bit build and the NVAPI shim retain their
   current best-effort/release-required behavior.
 - The daemon's `--locked` Cargo build remains reproducible.
-- Flatpak and native distro packaging remain on their current paths during the
-  prototype; the prototype must not require those formats to switch backend.
+- Flatpak and native distro packaging recipe files remain on their current
+  paths during the prototype. Their existing `pip install .` invocation will
+  exercise the new backend on this branch; explicit `setup.py` invocation
+  remains available as the compatibility comparison path.
 - No hardware mutation or privileged service installation is part of the
   prototype.
 
@@ -43,7 +45,9 @@ The native graph has three targets:
 Pure Python packages, package data, data files, and console scripts remain
 declared in `pyproject.toml` and are installed by `meson-python` without
 changing import paths. The existing `setup.py` remains in place during the
-prototype so current packaging and Flatpak builds are unaffected.
+prototype so an explicit setuptools comparison build remains available. The
+Flatpak and native distro recipe files are not rewritten; their existing
+source-install commands are validated against the new backend on this branch.
 
 ## Compatibility and failure behavior
 
