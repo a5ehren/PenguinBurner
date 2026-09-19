@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from pathlib import Path
 import glob
 import zipfile
-
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -27,6 +26,8 @@ def test_meson_wheel_contains_python_entry_points_and_package_data() -> None:
         assert "ui/__init__.py" in names
         assert "penguin_burner.py" in names
         assert "ui/assets" in "\n".join(names)
+        assert not any("__pycache__/" in name for name in names)
+        assert not any(name.startswith("overlay/native/") for name in names)
         assert any(
             name.endswith(".data/data/penguin-burner/penguin_burner.sh")
             for name in names

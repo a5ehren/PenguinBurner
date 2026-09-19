@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from pathlib import Path
 import re
-
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -27,4 +26,4 @@ def test_meson_declares_64_bit_vulkan_layer_outputs_and_install_path() -> None:
     assert "libVkLayer_penguinburner_latency.so" in text
     assert "VkLayer_PENGUINBURNER_latency.json" in text
     assert "overlay/native_layer" in text
-    assert re.search(r"build_native_layer.*?custom_target", text, re.S)
+    assert re.search(r"build_native_layer.*?custom_target", text, re.DOTALL)

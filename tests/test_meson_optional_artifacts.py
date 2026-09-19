@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from pathlib import Path
 import re
-
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -34,6 +33,6 @@ def test_optional_targets_default_to_disabled_development_mode() -> None:
     text = (ROOT / "meson.options").read_text(encoding="utf-8")
     for option in ("build_native_layer32", "build_nvapi_shim"):
         match = re.search(
-            rf"option\(\s*'{option}'.*?value:\s*(true|false)", text, re.S
+            rf"option\(\s*'{option}'.*?value:\s*(true|false)", text, re.DOTALL
         )
         assert match and match.group(1) == "false"

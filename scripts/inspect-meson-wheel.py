@@ -4,10 +4,9 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 import sys
 import zipfile
-
+from pathlib import Path
 
 REQUIRED_PAYLOADS = {
     "daemon": ("runtime/daemon_bin/penguin-burnerd", b"\x7fELF"),

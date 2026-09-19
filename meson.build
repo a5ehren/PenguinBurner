@@ -27,7 +27,24 @@ python_packages = [
   'ui',
 ]
 foreach package : python_packages
-  install_subdir(package, install_dir: python_install_dir)
+  package_excludes = ['__pycache__']
+  pycache_dirs = run_command(
+    'find', package, '-type', 'd', '-name', '__pycache__', '-printf', '%P\\n',
+    check: true,
+  ).stdout().strip().split('\n')
+  foreach pycache_dir : pycache_dirs
+    if pycache_dir != ''
+      package_excludes += [pycache_dir]
+    endif
+  endforeach
+  if package == 'overlay'
+    package_excludes += ['native']
+  endif
+  install_subdir(
+    package,
+    install_dir: python_install_dir,
+    exclude_directories: package_excludes,
+  )
 endforeach
 python.install_sources('penguin_burner.py', pure: false)
 install_data('penguin_burner.sh', install_dir: get_option('datadir') / 'penguin-burner')
