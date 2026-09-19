@@ -11,6 +11,38 @@ native_layer_source_dir = project_root / 'overlay' / 'native' / 'latency_layer'
 nvapi_shim_source_dir = project_root / 'overlay' / 'native' / 'nvapi_shim'
 mingw_cxx = 'x86_64-w64-mingw32-g++'
 python = import('python').find_installation()
+python_install_dir = python.get_install_dir(pure: false)
+
+python_packages = [
+  'auto_uv',
+  'cli',
+  'common',
+  'curve_editors',
+  'drivers',
+  'integrations',
+  'overlay',
+  'profiles',
+  'runtime',
+  'stability',
+  'ui',
+]
+foreach package : python_packages
+  install_subdir(package, install_dir: python_install_dir)
+endforeach
+python.install_sources('penguin_burner.py', pure: false)
+install_data('penguin_burner.sh', install_dir: get_option('datadir') / 'penguin-burner')
+install_data(
+  'packaging/linux/io.github.jpietek.PenguinBurner.desktop',
+  install_dir: get_option('datadir') / 'applications',
+)
+install_data(
+  'packaging/icons/hicolor/256x256/apps/penguin-burner.png',
+  install_dir: get_option('datadir') / 'icons/hicolor/256x256/apps',
+)
+install_data(
+  'packaging/icons/hicolor/512x512/apps/penguin-burner.png',
+  install_dir: get_option('datadir') / 'icons/hicolor/512x512/apps',
+)
 
 message('burnerd source: ' + burnerd_source_dir)
 message('Vulkan layer source: ' + native_layer_source_dir)
@@ -28,7 +60,7 @@ if get_option('build_daemon')
     ],
     build_by_default: true,
     install: true,
-    install_dir: 'runtime/daemon_bin',
+    install_dir: python.get_install_dir(pure: false, subdir: 'runtime/daemon_bin'),
   )
 endif
 
@@ -48,7 +80,10 @@ if get_option('build_native_layer')
     ],
     build_by_default: true,
     install: true,
-    install_dir: ['overlay/native_layer', 'overlay/native_layer'],
+    install_dir: [
+      python.get_install_dir(pure: false, subdir: 'overlay/native_layer'),
+      python.get_install_dir(pure: false, subdir: 'overlay/native_layer'),
+    ],
   )
 endif
 
@@ -69,7 +104,10 @@ if get_option('build_native_layer32')
     ],
     build_by_default: true,
     install: true,
-    install_dir: ['overlay/native_layer', 'overlay/native_layer'],
+    install_dir: [
+      python.get_install_dir(pure: false, subdir: 'overlay/native_layer'),
+      python.get_install_dir(pure: false, subdir: 'overlay/native_layer'),
+    ],
   )
 endif
 
@@ -86,6 +124,6 @@ if get_option('build_nvapi_shim')
     ],
     build_by_default: true,
     install: true,
-    install_dir: 'overlay/nvapi_shim',
+    install_dir: python.get_install_dir(pure: false, subdir: 'overlay/nvapi_shim'),
   )
 endif

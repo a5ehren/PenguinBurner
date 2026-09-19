@@ -6,6 +6,7 @@ from __future__ import annotations
 import shutil
 import subprocess
 import sys
+import os
 from pathlib import Path
 
 
@@ -39,6 +40,9 @@ def main() -> int:
                 "-DPB_LAYER_NAME_SUFFIX=_i386",
             ]
         )
+    vulkan_include_dir = os.environ.get("VULKAN_INCLUDE_DIR")
+    if vulkan_include_dir:
+        configure.append(f"-DVULKAN_INCLUDE_DIR={vulkan_include_dir}")
     subprocess.run(configure, check=True)
     subprocess.run(["cmake", "--build", str(build_dir), "--config", "Release"], check=True)
 
