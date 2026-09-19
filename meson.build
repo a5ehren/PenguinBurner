@@ -9,6 +9,7 @@ project_root = meson.project_source_root()
 burnerd_source_dir = project_root / 'burnerd'
 native_layer_source_dir = project_root / 'overlay' / 'native' / 'latency_layer'
 nvapi_shim_source_dir = project_root / 'overlay' / 'native' / 'nvapi_shim'
+mingw_cxx = 'x86_64-w64-mingw32-g++'
 python = import('python').find_installation()
 
 message('burnerd source: ' + burnerd_source_dir)
@@ -48,5 +49,43 @@ if get_option('build_native_layer')
     build_by_default: true,
     install: true,
     install_dir: ['overlay/native_layer', 'overlay/native_layer'],
+  )
+endif
+
+if get_option('build_native_layer32')
+  custom_target(
+    'penguinburner-latency-layer-i386',
+    output: [
+      'libVkLayer_penguinburner_latency_i386.so',
+      'VkLayer_PENGUINBURNER_latency.i386.json',
+    ],
+    command: [
+      python,
+      project_root / 'scripts' / 'meson-build-cmake-layer.py',
+      native_layer_source_dir,
+      '@OUTPUT0@',
+      '@OUTPUT1@',
+      '--m32',
+    ],
+    build_by_default: true,
+    install: true,
+    install_dir: ['overlay/native_layer', 'overlay/native_layer'],
+  )
+endif
+
+if get_option('build_nvapi_shim')
+  custom_target(
+    'penguinburner-nvapi-shim',
+    output: 'nvapi64.dll',
+    command: [
+      python,
+      project_root / 'scripts' / 'meson-build-nvapi-shim.py',
+      nvapi_shim_source_dir,
+      '@OUTPUT@',
+      mingw_cxx,
+    ],
+    build_by_default: true,
+    install: true,
+    install_dir: 'overlay/nvapi_shim',
   )
 endif
